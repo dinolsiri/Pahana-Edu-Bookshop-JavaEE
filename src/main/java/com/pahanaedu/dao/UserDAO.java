@@ -1,12 +1,5 @@
 package com.pahanaedu.dao;
 
-import com.pahanaedu.util.DatabaseConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
-public class CustomerDAO package com.pahanaedu.dao;
-
 import com.pahanaedu.model.User;
 import com.pahanaedu.util.DatabaseConnection;
 
@@ -32,6 +25,4 @@ public class UserDAO {
             return false;
         }
     }
-}
-{
 }

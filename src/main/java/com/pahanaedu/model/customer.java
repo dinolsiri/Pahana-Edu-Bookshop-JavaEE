@@ -1,4 +1,4 @@
 package com.pahanaedu.model;
 
-public class Customer {
+public class customer {
 }
