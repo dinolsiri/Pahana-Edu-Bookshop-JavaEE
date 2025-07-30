@@ -2,10 +2,14 @@ package com.pahanaedu.controller;
 
 import com.pahanaedu.dao.UserDAO;
 import com.pahanaedu.model.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+
 import java.io.IOException;
 
 @WebServlet("/login") // URL pattern for the login form POST
