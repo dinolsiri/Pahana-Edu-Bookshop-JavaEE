@@ -9,24 +9,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-
 import java.io.IOException;
 
-@WebServlet("/login") // URL pattern for the login form POST
+@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
 
     private UserDAO userDAO;
 
     @Override
     public void init() {
-        userDAO = new UserDAO(); // initialize DAO
+        userDAO = new UserDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Get form data from login.jsp
+        System.out.println("Login servlet called..");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -34,16 +32,23 @@ public class LoginServlet extends HttpServlet {
         User user = userDAO.loginUser(email, password);
 
         if (user != null) {
+            System.out.println("Login success..");
             // Login success → start session
             HttpSession session = request.getSession();
             session.setAttribute("loggedUser", user);
+            session.setAttribute("userEmail", user.getEmail());
+            session.setAttribute("userName", user.getName());
 
-            // Redirect to dashboard or welcome page
-            response.sendRedirect("dashboard.jsp");
+            // Set response headers to indicate success
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"success\": true, \"message\": \"Login successful\"}");
         } else {
-            // Login failed → show error message
-            request.setAttribute("error", "Invalid email or password!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            System.out.println("Login failed..");
+            // Login failed → return error
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"success\": false, \"message\": \"Invalid email or password!\"}");
         }
     }
 }

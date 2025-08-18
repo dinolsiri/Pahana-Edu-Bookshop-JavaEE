@@ -1,13 +1,32 @@
 // Global variables
+const BASE_URL = "http://localhost:8080/PahanaEduBillingSystem_war_exploded";
 let currentUser = null;
 let currentSection = 'dashboard';
 
 // Initialize application
 document.addEventListener('DOMContentLoaded', function() {
-    // Skip login and go directly to dashboard
-    currentUser = { email: 'admin@pahanaedu.com', name: 'Admin User' };
-    showMainContent();
-    loadDashboard();
+    // Create a mock session for development
+    fetch(BASE_URL + '/api/auth/session', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentUser = data.user;
+        } else {
+            // Mock user for development
+            currentUser = { email: 'admin@pahanaedu.com', name: 'Admin User' };
+        }
+        showMainContent();
+        loadDashboard();
+    })
+    .catch(() => {
+        // Fallback for development
+        currentUser = { email: 'admin@pahanaedu.com', name: 'Admin User' };
+        showMainContent();
+        loadDashboard();
+    });
 });
 
 // Comment out or modify checkSession to skip authentication
@@ -71,10 +90,10 @@ function showSection(sectionName) {
 function loadDashboard() {
     // Load dashboard statistics
     Promise.all([
-        fetch('/api/customers/count').then(r => r.json()),
-        fetch('/api/items/count').then(r => r.json()),
-        fetch('/api/bills/monthly-sales').then(r => r.json()),
-        fetch('/api/bills/count').then(r => r.json())
+        fetch(BASE_URL + '/api/customers/count').then(r => r.json()),
+        fetch(BASE_URL + '/api/items/count').then(r => r.json()),
+        fetch(BASE_URL + '/api/bills/monthly-sales').then(r => r.json()),
+        fetch(BASE_URL + '/api/bills/count').then(r => r.json())
     ]).then(([customers, items, sales, bills]) => {
         document.getElementById('totalCustomers').textContent = customers.count || 0;
         document.getElementById('totalItems').textContent = items.count || 0;
